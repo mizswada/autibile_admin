@@ -82,6 +82,25 @@ export default [
           },
         ],
       },
+
+      {
+        title: "User Management",
+        icon: "ic:outline-person",
+        child: [
+          {
+            title: "Parents",
+            path: "/userManagement/parent",
+          },
+          {
+            title: "Doctors",
+            path: "/userManagement/doctor",
+          },
+          {
+            title: "Therapists",
+            path: "/userManagement/therapist",
+          },
+        ],
+      },
     ],
   },
   {
