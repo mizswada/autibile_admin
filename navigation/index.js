@@ -99,6 +99,25 @@ export default [
             title: "Therapists",
             path: "/userManagement/therapist",
           },
+          {
+            title: "Users Approval",
+            path: "/userManagement/userApproval",
+          },
+        ],
+      },
+
+      {
+        title: "Appointment Management",
+        icon: "ic:outline-calendar-today",
+        child: [
+          {
+            title: "New Appointment",
+            path: "/appointmentManagement/newAppointment",
+          },
+          {
+            title: "Scheduled Appointment",
+            path: "/appointmentManagement/scheduledAppointment",
+          },
         ],
       },
     ],
