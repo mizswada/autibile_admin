@@ -3,12 +3,12 @@ import { ref } from 'vue';
 
 const data = [
   {
-    "fullName": "Jane Doe",
-    "email": "janedoe@gmail.com",
-    "phoneNumber": "9876543210",
-    "specialization": "Speech Therapy",
-    "experience": 5,
-    "action": "edit",
+    centreName: "Bright Minds Autism Centre",
+    address: "123 Main St, Cityville",
+    contactNumber: "1234567890",
+    email: "info@brightminds.com",
+    headOfCentre: "Dr. John Smith",
+    action: "edit",
   }
 ]
 
@@ -16,42 +16,40 @@ const showModal = ref(false);
 const showModalDelete = ref(false);
 const modalType = ref('');
 const showModalForm = ref({
-  fullName: '',
+  centreName: '',
+  address: '',
+  contactNumber: '',
   email: '',
-  phoneNumber: '',
-  specialization: '',
-  experience: '',
-  file: null,
+  headOfCentre: '',
 });
 const showModalDeleteForm = ref({
-  fullName: '',
+  centreName: '',
+  address: '',
+  contactNumber: '',
   email: '',
-  phoneNumber: '',
-  specialization: '',
-  experience: '',
+  headOfCentre: '',
 });
 
 const columns = [
-  { name: 'fullname', label: 'Full Name' },
+  { name: 'centreName', label: 'Centre Name' },
+  { name: 'address', label: 'Address' },
+  { name: 'contactNumber', label: 'Contact Number' },
   { name: 'email', label: 'Email' },
-  { name: 'phonenumber', label: 'Phone Number' },
-  { name: 'specialization', label: 'Specialization' },
-  { name: 'experience', label: 'Experience (years)' },
+  { name: 'headOfCentre', label: 'Head of Centre' },
   { name: 'action', label: 'Actions' }
 ];
 
 function openModal(value, action) {
   modalType.value = action;
   if (action === 'edit' && value) {
-    showModalForm.value = { ...value, file: null };
+    showModalForm.value = { ...value };
   } else {
     showModalForm.value = {
-      fullName: '',
+      centreName: '',
+      address: '',
+      contactNumber: '',
       email: '',
-      phoneNumber: '',
-      specialization: '',
-      experience: '',
-      file: null,
+      headOfCentre: '',
     };
   }
   showModal.value = true;
@@ -66,14 +64,14 @@ function openModalAdd() {
   openModal(null, 'add');
 }
 
-function saveTherapist() {
-  // Implement the logic to save therapist
+function saveCentre() {
+  // Implement the logic to save centre
   console.log('Save', showModalForm.value);
   showModal.value = false;
 }
 
-function deleteTherapist() {
-  // Implement the logic to delete therapist
+function deleteCentre() {
+  // Implement the logic to delete centre
   console.log('Delete', showModalDeleteForm.value);
   showModalDelete.value = false;
 }
@@ -81,12 +79,12 @@ function deleteTherapist() {
 
 <template>
   <div class="mb-4">
-    <h1 class="text-2xl font-bold">Therapists</h1>
+    <h1 class="text-2xl font-bold">Manage Autism Centre</h1>
     <div class="card p-4 mt-4">
       <div class="flex justify-end items-center mb-4">
         <rs-button @click="openModal(null, 'add')">
           <Icon name="material-symbols:add" class="mr-1"></Icon>
-          Add Therapist
+          Add Centre
         </rs-button>
       </div>
       <rs-table
@@ -124,18 +122,32 @@ function deleteTherapist() {
     </div>
   </div>
   <rs-modal
-    :title="modalType == 'edit' ? 'Edit Therapist' : 'Add Therapist'"
+    :title="modalType == 'edit' ? 'Edit Centre' : 'Add Centre'"
     ok-title="Save"
-    :ok-callback="saveTherapist"
+    :ok-callback="saveCentre"
     cancel-title="Cancel"
     v-model="showModal"
     :overlay-close="false"
   >
     <FormKit
       type="text"
-      v-model="showModalForm.fullName"
-      name="fullName"
-      label="Full Name"
+      v-model="showModalForm.centreName"
+      name="centreName"
+      label="Centre Name"
+      :disabled="modalType == 'edit' ? true : false"
+    />
+    <FormKit
+      type="text"
+      v-model="showModalForm.address"
+      name="address"
+      label="Address"
+      :disabled="modalType == 'edit' ? true : false"
+    />
+    <FormKit
+      type="number"
+      v-model="showModalForm.contactNumber"
+      name="contactNumber"
+      label="Contact Number"
       :disabled="modalType == 'edit' ? true : false"
     />
     <FormKit
@@ -146,45 +158,25 @@ function deleteTherapist() {
       :disabled="modalType == 'edit' ? true : false"
     />
     <FormKit
-      type="number"
-      v-model="showModalForm.phoneNumber"
-      name="phoneNumber"
-      label="Phone Number"
-      :disabled="modalType == 'edit' ? true : false"
-    />
-    <FormKit
       type="text"
-      v-model="showModalForm.specialization"
-      name="specialization"
-      label="Specialization"
+      v-model="showModalForm.headOfCentre"
+      name="headOfCentre"
+      label="Head of Centre"
       :disabled="modalType == 'edit' ? true : false"
     />
-    <FormKit
-      type="number"
-      v-model="showModalForm.experience"
-      name="experience"
-      label="Experience (years)"
-      :disabled="modalType == 'edit' ? true : false"
-    />
-
-    <FormKit
-                  type="file"
-                  label="Upload Pictures"
-                  accept=".jpeg, .gif, .png, .tiff, .bmp, and .pdf"
-                />
   </rs-modal>
   <!-- Modal Delete Confirmation -->
   <rs-modal
     title="Delete Confirmation"
     ok-title="Yes"
     cancel-title="No"
-    :ok-callback="deleteTherapist"
+    :ok-callback="deleteCentre"
     v-model="showModalDelete"
     :overlay-close="false"
   >
     <p>
-      Are you sure want to delete this therapist ({{
-        showModalDeleteForm.fullName
+      Are you sure want to delete this centre ({{
+        showModalDeleteForm.centreName
       }})?
     </p>
   </rs-modal>

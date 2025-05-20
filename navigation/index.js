@@ -64,33 +64,25 @@ export default [
           },
         ],
       },
-      {
-        title: "E-commerce",
-        icon: "ic:outline-shopping-bag",
-        child: [
-          {
-            title: "Products",
-            path: "/apps/ecommerce/products",
-          },
-          {
-            title: "Product Detail",
-            path: "/apps/ecommerce/product-detail?sku=P-1001",
-          },
-          {
-            title: "Checkout",
-            path: "/apps/ecommerce/checkout",
-          },
-        ],
-      },
 
       {
         title: "User Management",
         icon: "ic:outline-person",
         child: [
+      {
+        title: "Parents Management",
+        icon: "ic:outline-person",
+        child: [
           {
             title: "Parents",
-            path: "/userManagement/parent",
+            path: "/userManagement/parent/parents",
           },
+          {
+            title: "Manage Child",
+            path: "/userManagement/parent/manageChild",
+          },
+        ],
+      },
           {
             title: "Doctors",
             path: "/userManagement/doctor",
@@ -119,6 +111,35 @@ export default [
             path: "/appointmentManagement/scheduledAppointment",
           },
         ],
+      },
+      {
+        title: "Systems Logs",
+        icon: "ic:outline-history",
+        path: "/systemLogs",
+      },
+
+       {
+        title: "Reports",
+        icon: "ic:outline-pie-chart",
+        path: "/reports",
+      },
+
+      {
+        title: "Manage Autism Centre",
+        icon:"ic:outline-home",
+        path: "/autismCentre",
+      },
+
+       {
+        title: "Manage Questionnaire",
+        icon: "ic:outline-question-answer",
+        path: "/questionnaire",
+      },
+
+      {
+        title: "Manage FAQ",
+        icon: "ic:outline-question-answer",
+        path: "/faq",
       },
     ],
   },

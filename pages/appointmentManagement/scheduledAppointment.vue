@@ -1,96 +1,54 @@
-<script setup>
-import { ref } from 'vue';
+<script setup> 
+                    const { $FullCalendar } = useNuxtApp();
+                    const FullCalendar = $FullCalendar;
 
-const data = [
-  {
-    patientName: "Alice Brown",
-    userType: "Doctor",
-    userName: "Dr. John Smith",
-    date: "2024-06-10",
-    time: "10:00",
-    notes: "First consultation",
-  },
-  {
-    patientName: "Bob Green",
-    userType: "Therapist",
-    userName: "Jane Doe",
-    date: "2024-06-11",
-    time: "14:30",
-    notes: "Speech therapy session",
-  }
-];
+                    const calendarOptions = ref(null);
 
-const showModal = ref(false);
-const selectedAppointment = ref({});
+                    calendarOptions.value = {
+                      ...FullCalendar?.options,
+                      initialView: "dayGridMonth",
+                      headerToolbar: {
+                        left: "prev,next title",
+                        right: "dayGridMonth,timeGridWeek,listWeek",
+                      },
+                      dragScroll: true,
+                      dayMaxEvents: 2,
+                      navLinks: true,
+                      events: [
+                        { title: "John Doe", start: "2025-07-05", end: "2025-07-08" },
+                        { title: "Erica Smith", start: "2025-07-05", end: "2025-07-08" },
+                        { title: "Bella Swan", start: "2025-07-05", end: "2025-07-08" },
+                        { title: "Jack Reacher", start: "2025-07-05", end: "2025-07-08" },
+                        { title: "Tom Cruise", start: "2025-07-05", end: "2025-07-08" },
+                        { title: "Edward Cullen", start: "2025-07-05", end: "2025-07-08" },
+                        { title: "Boboiboy", date: "2025-07-22" },
+                      ],
+                    };
 
-const columns = [
-  { name: 'patientName', label: 'Patient Name' },
-  { name: 'userType', label: 'Type' },
-  { name: 'userName', label: 'Doctor/Therapist' },
-  { name: 'date', label: 'Date' },
-  { name: 'time', label: 'Time' },
-  { name: 'notes', label: 'Notes' },
-  { name: 'action', label: 'Actions' }
-];
+                    const changeKey = ref(0);
 
-function openModal(appointment) {
-  selectedAppointment.value = { ...appointment };
-  showModal.value = true;
-}
-</script>
+                    onMounted(() => {
+                      setTimeout(() => {
+                        changeKey.value++;
+                      }, 500);
+                    });
+                    </script>
 
 <template>
   <div class="mb-4">
-    <h1 class="text-2xl font-bold">Scheduled Appointments</h1>
-    <div class="card p-4 mt-4">
-      <div class="flex justify-end items-center mb-4">
-        <router-link to="/appointmentManagement/newAppointment">
-          <rs-button>
-            <Icon name="material-symbols:add" class="mr-1"></Icon>
-            New Appointment
-          </rs-button>
-        </router-link>
-      </div>
-      <rs-table
-        :data="data"
-        :columns="columns"
-        :options="{
-          variant: 'default',
-          striped: true,
-          borderless: true,
-        }"
-        :options-advanced="{
-          sortable: true,
-          responsive: true,
-          filterable: false,
-        }"
-        advanced
-      >
-        <template v-slot:action="data">
-          <div class="flex justify-center items-center">
-            <rs-button size="sm" @click="openModal(data.value)">
-              View
-            </rs-button>
-          </div>
-        </template>
-      </rs-table>
+    <h1 class="text-2xl font-bold">Scheduled Appointment</h1>
+    <div class="flex justify-end items-center mb-4">
+      <router-link to="/appointmentManagement/newAppointment">
+        <rs-button>
+          <Icon name="material-symbols:add" class="mr-1" />
+          New Appointment
+        </rs-button>
+      </router-link>
+    </div>
+    <div class="bg-white shadow-md rounded p-4 mb-4"> 
+      <ClientOnly>
+       <FullCalendar :key="changeKey" :options="calendarOptions" />
+      </ClientOnly>
     </div>
   </div>
-  <rs-modal
-    title="Appointment Details"
-    ok-title="Close"
-    :ok-callback="() => { showModal = false }"
-    v-model="showModal"
-    :overlay-close="true"
-    :show-cancel="false"
-  >
-    <div v-if="selectedAppointment">
-      <div><strong>Patient Name:</strong> {{ selectedAppointment.patientName }}</div>
-      <div><strong>Type:</strong> {{ selectedAppointment.userType }}</div>
-      <div><strong>Doctor/Therapist:</strong> {{ selectedAppointment.userName }}</div>
-      <div><strong>Date:</strong> {{ selectedAppointment.date }}</div>
-      <div><strong>Time:</strong> {{ selectedAppointment.time }}</div>
-      <div><strong>Notes:</strong> {{ selectedAppointment.notes }}</div>
-    </div>
-  </rs-modal>
 </template>

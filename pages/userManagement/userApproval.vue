@@ -24,6 +24,7 @@ const data = [
 
 const showModal = ref(false);
 const showModalDelete = ref(false);
+const showApproveConfirm = ref(false);
 const modalType = ref('');
 const showModalForm = ref({
   fullName: '',
@@ -54,8 +55,12 @@ const columns = [
 
 function openModal(value, action) {
   modalType.value = action;
-  if (action === 'edit' && value) {
+  if (action === 'approve' && value) {
     showModalForm.value = { ...value };
+    showApproveConfirm.value = true;
+  } else if (action === 'edit' && value) {
+    showModalForm.value = { ...value };
+    showModal.value = true;
   } else {
     showModalForm.value = {
       fullName: '',
@@ -65,8 +70,8 @@ function openModal(value, action) {
       specialization: '',
       experience: '',
     };
+    showModal.value = true;
   }
-  showModal.value = true;
 }
 
 function openModalDelete(value) {
@@ -82,6 +87,11 @@ function approveUser() {
   // Implement the logic to approve user
   console.log('Approve', showModalForm.value);
   showModal.value = false;
+}
+
+function confirmApproveUser() {
+  showApproveConfirm.value = false;
+  showModal.value = true;
 }
 
 function rejectUser() {
@@ -123,6 +133,19 @@ function rejectUser() {
       </rs-table>
     </div>
   </div>
+  <!-- Approve Confirmation Modal -->
+  <rs-modal
+    title="Approve Confirmation"
+    ok-title="Yes"
+    cancel-title="No"
+    :ok-callback="confirmApproveUser"
+    v-model="showApproveConfirm"
+    :overlay-close="false"
+  >
+    <p>
+      Do you want to approve this user ({{ showModalForm.fullName }})?
+    </p>
+  </rs-modal>
   <rs-modal
     :title="'Approve User (' + (showModalForm.role || '') + ')'" 
     ok-title="Approve"

@@ -21,6 +21,7 @@ const showModalForm = ref({
   phoneNumber: '',
   specialization: '',
   experience: '',
+  file: null,
 });
 const showModalDeleteForm = ref({
   fullName: '',
@@ -42,7 +43,7 @@ const columns = [
 function openModal(value, action) {
   modalType.value = action;
   if (action === 'edit' && value) {
-    showModalForm.value = { ...value };
+    showModalForm.value = { ...value, file: null };
   } else {
     showModalForm.value = {
       fullName: '',
@@ -50,6 +51,7 @@ function openModal(value, action) {
       phoneNumber: '',
       specialization: '',
       experience: '',
+      file: null,
     };
   }
   showModal.value = true;
@@ -166,6 +168,12 @@ function deleteDoctor() {
       label="Experience (years)"
       :disabled="modalType == 'edit' ? true : false"
     />
+
+    <FormKit
+                  type="file"
+                  label="Upload Pictures"
+                  accept=".jpeg, .gif, .png, .tiff, .bmp, and .pdf"
+                />
   </rs-modal>
   <!-- Modal Delete Confirmation -->
   <rs-modal
