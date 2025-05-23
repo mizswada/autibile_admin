@@ -2,39 +2,62 @@
 import { ref } from 'vue';
 
 const questions = ref([
-  { id: 1, question: "Does your child respond to their name?", enabled: true, type: "yesno" },
-  { id: 2, question: "Does your child make eye contact?", enabled: true, type: "scale" },
-  { id: 3, question: "Does your child use gestures to communicate?", enabled: false, type: "yesno" },
-  { id: 4, question: "Does your child play with other children?", enabled: true, type: "scale" },
+  { id: 1, question: "Does your child respond to their name?",action: "edit" },
+  { id: 2, question: "Does your child make eye contact?",action: "edit" },
+  { id: 3, question: "Does your child use gestures to communicate?",action: "edit" }, 
+  { id: 4, question: "Does your child play with other children?",action: "edit" },
+  { id: 5, question: "Does your child have a limited range of interests?",action: "edit" },
+  { id: 6, question: "Does your child have difficulty understanding social cues?",action: "edit" },
+  { id: 7, question: "Does your child have repetitive behaviors or routines?",action: "edit" },
+  { id: 8, question: "Does your child have difficulty with changes in routine?",action: "edit" },
+  { id: 9, question: "Does your child have sensory sensitivities?",action: "edit" },
 ]);
 
 const showModal = ref(false);
+const isEdit = ref(false);
+const editId = ref(null);
 const newQuestion = ref({
   question: '',
-  enabled: true,
-  type: 'yesno',
 });
 
-function toggleQuestion(id) {
-  const q = questions.value.find(q => q.id === id);
-  if (q) q.enabled = !q.enabled;
-}
-
 function openAddModal() {
-  newQuestion.value = { question: '', enabled: true, type: 'yesno' };
+  newQuestion.value = { question: '' };
+  isEdit.value = false;
+  editId.value = null;
   showModal.value = true;
 }
 
-function addQuestion() {
+function openEditModal(q) {
+  newQuestion.value = { question: q.question };
+  isEdit.value = true;
+  editId.value = q.id;
+  showModal.value = true;
+}
+
+function saveQuestion() {
   if (newQuestion.value.question.trim()) {
-    questions.value.push({
-      id: Date.now(),
-      question: newQuestion.value.question,
-      enabled: newQuestion.value.enabled,
-      type: newQuestion.value.type,
-    });
+    if (isEdit.value && editId.value !== null) {
+      // Edit existing
+      const idx = questions.value.findIndex(q => q.id === editId.value);
+      if (idx !== -1) {
+        questions.value[idx] = {
+          ...questions.value[idx],
+          question: newQuestion.value.question,
+        };
+      }
+    } else {
+      // Add new
+      questions.value.push({
+        id: Date.now(),
+        question: newQuestion.value.question,
+      });
+    }
     showModal.value = false;
   }
+}
+
+function deleteQuestion(id) {
+  questions.value = questions.value.filter(q => q.id !== id);
 }
 </script>
 
@@ -50,73 +73,35 @@ function addQuestion() {
     <div class="card p-4 mt-4">
       <rs-table
         :data="questions"
-        :columns="[
-          { name: 'question', label: 'Question' },
-          { name: 'type', label: 'Type' },
-          { name: 'enabled', label: 'Enabled' }
-        ]"
+        :columns="
+          [
+            { name: 'question', label: 'Question' },
+            { name: 'action', label: 'Actions', slot: true }
+          ]
+        "
         :options="{ borderless: true }"
         advanced
       >
-        <template v-slot:enabled="slotProps">
-          <input
-            type="checkbox"
-            :checked="slotProps.value"
-            @change="toggleQuestion(slotProps.row.id)"
-          />
-        </template>
-        <template v-slot:type="slotProps">
-          <span v-if="slotProps.value === 'yesno'">Yes/No</span>
-          <span v-else-if="slotProps.value === 'scale'">Scale</span>
+        <template #action="slotProps">
+          <div class="flex gap-2">
+            <rs-button size="sm" @click="openEditModal(slotProps.row)">
+              <Icon name="material-symbols:edit-outline-rounded" />
+            </rs-button>
+            <rs-button size="sm" variant="danger" @click="deleteQuestion(slotProps.row.id)">
+              <Icon name="material-symbols:delete-outline" />
+            </rs-button>
+          </div>
         </template>
       </rs-table>
     </div>
     <rs-modal
-      title="Add Question"
-      ok-title="Add"
+      :title="isEdit ? 'Edit Question' : 'Add Question'"
+      ok-title="Save"
       cancel-title="Cancel"
-      :ok-callback="addQuestion"
+      :ok-callback="saveQuestion"
       v-model="showModal"
       :overlay-close="false"
     >
-      <div class="mt-2">
-        <label class="block font-medium mb-1">Enabled by default</label>
-        <label class="mr-4">
-          <input
-            type="radio"
-            :value="true"
-            v-model="newQuestion.enabled"
-          />
-          Yes
-        </label>
-        <label>
-          <input
-            type="radio"
-            :value="false"
-            v-model="newQuestion.enabled"
-          />
-          No
-        </label>
-      </div>
-      <div class="mt-2">
-        <label class="block font-medium mb-1">Question Type</label>
-        <label class="mr-4">
-          <input
-            type="radio"
-            value="yesno"
-            v-model="newQuestion.type"
-          />
-          Yes/No
-        </label>
-        <label>
-          <input
-            type="radio"
-            value="scale"
-            v-model="newQuestion.type"
-          />
-          Scale (1-5)
-        </label>
-      </div>
       <FormKit
         type="text"
         v-model="newQuestion.question"

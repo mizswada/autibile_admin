@@ -95,6 +95,10 @@ export default [
             title: "Users Approval",
             path: "/userManagement/userApproval",
           },
+          {
+            title: "Profile Edit",
+            path: "/userManagement/profileEdit",
+          },
         ],
       },
 
@@ -140,6 +144,31 @@ export default [
         title: "Manage FAQ",
         icon: "ic:outline-question-answer",
         path: "/faq",
+      },
+
+      {
+        title: "Tech Support",
+        icon: "ic:outline-headset-mic",
+        path: "/technicalSupport",
+      },
+      {
+        title: "Community Support",
+        icon: "ic:outline-headset-mic",
+        child: [
+          {
+            title: "Posts Management",
+            path: "/communitySupport/postManagement",
+          },
+          {
+            title: "Reported Posts",
+            path: "/communitySupport/reportedContent",
+          },
+        ],
+      },
+       {
+        title: "Therapy & Activities Management",
+        icon: "ic:outline-emoji-people",
+        path: "/therapyAndActivity",
       },
     ],
   },
