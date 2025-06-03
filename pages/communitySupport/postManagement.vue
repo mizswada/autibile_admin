@@ -9,6 +9,7 @@ const posts = ref([
     content: "We just received a diagnosis for our child. Any advice is appreciated.",
     date: "2024-06-01",
     flagged: false,
+    action: "edit",
   },
   {
     id: 2,
@@ -17,6 +18,7 @@ const posts = ref([
     content: "Looking for recommendations for speech therapy in KL.",
     date: "2024-06-02",
     flagged: false,
+    action: "edit",
   },
   {
     id: 3,
@@ -25,6 +27,7 @@ const posts = ref([
     content: "Visit spamwebsite.com for cheap deals.",
     date: "2024-06-03",
     flagged: true,
+    action: "edit",
   }
 ]);
 

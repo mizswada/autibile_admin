@@ -3,44 +3,44 @@ import { ref } from 'vue';
 
 // Activity Plans
 const activityPlans = ref([
-  { id: 1, name: "Speech Therapy Plan", description: "Weekly speech therapy activities", progress: "In Progress" },
-  { id: 2, name: "Social Skills Plan", description: "Group activities for social skills", progress: "Completed" },
+  { id: 1, patientName: "Alice", name: "Speech Therapy Plan", description: "Weekly speech therapy activities", progress: "In Progress", action: "edit" },
+  { id: 2, patientName: "Bob", name: "Social Skills Plan", description: "Group activities for social skills", progress: "Completed", action: "edit" },
 ]);
 
 // Scheduled Sessions
 const sessions = ref([
-  { id: 1, planId: 1, date: "2024-06-20", time: "10:00", therapist: "Jane Doe", status: "Scheduled" },
-  { id: 2, planId: 2, date: "2024-06-22", time: "14:00", therapist: "John Smith", status: "Completed" },
+  { id: 1, patientName: "Alice", date: "2024-06-20", time: "10:00", therapist: "Jane Doe", status: "Scheduled", action: "edit" },
+  { id: 2, patientName: "Bob", date: "2024-06-22", time: "14:00", therapist: "John Smith", status: "Completed", action: "edit" },
 ]);
 
 // Assignments
 const assignments = ref([
-  { id: 1, planId: 1, assignee: "Alice", assignedBy: "Admin", date: "2024-06-10" },
-  { id: 2, planId: 2, assignee: "Bob", assignedBy: "Admin", date: "2024-06-12" },
+  { id: 1, patientName: "Alice", assignee: "Alice", assignedBy: "Admin", date: "2024-06-10", action: "edit" },
+  { id: 2, patientName: "Bob", assignee: "Bob", assignedBy: "Admin", date: "2024-06-12", action: "edit" },
 ]);
 
 // Feedback/Progress
 const feedbacks = ref([
-  { id: 1, planId: 1, feedback: "Good progress in speech clarity.", date: "2024-06-15" },
-  { id: 2, planId: 2, feedback: "Excellent participation in group.", date: "2024-06-18" },
+  { id: 1, patientName: "Alice", feedback: "Good progress in speech clarity.", date: "2024-06-15", action: "edit" },
+  { id: 2, patientName: "Bob", feedback: "Excellent participation in group.", date: "2024-06-18", action: "edit" },
 ]);
 
 // Modals and forms
 const showPlanModal = ref(false);
 const isEditPlan = ref(false);
-const planForm = ref({ id: null, name: '', description: '', progress: '' });
+const planForm = ref({ id: null, patientName: '', name: '', description: '', progress: '' });
 
 const showSessionModal = ref(false);
 const isEditSession = ref(false);
-const sessionForm = ref({ id: null, planId: '', date: '', time: '', therapist: '', status: '' });
+const sessionForm = ref({ id: null, patientName: '', date: '', time: '', therapist: '', status: '' });
 
 const showAssignmentModal = ref(false);
 const isEditAssignment = ref(false);
-const assignmentForm = ref({ id: null, planId: '', assignee: '', assignedBy: '', date: '' });
+const assignmentForm = ref({ id: null, patientName: '', assignee: '', assignedBy: '', date: '' });
 
 const showFeedbackModal = ref(false);
 const isEditFeedback = ref(false);
-const feedbackForm = ref({ id: null, planId: '', feedback: '', date: '' });
+const feedbackForm = ref({ id: null, patientName: '', feedback: '', date: '' });
 
 // Activity Plan CRUD
 function openPlanModal(plan = null) {
@@ -48,7 +48,7 @@ function openPlanModal(plan = null) {
     planForm.value = { ...plan };
     isEditPlan.value = true;
   } else {
-    planForm.value = { id: null, name: '', description: '', progress: '' };
+    planForm.value = { id: null, patientName: '', name: '', description: '', progress: '' };
     isEditPlan.value = false;
   }
   showPlanModal.value = true;
@@ -58,7 +58,7 @@ function savePlan() {
     const idx = activityPlans.value.findIndex(p => p.id === planForm.value.id);
     if (idx !== -1) activityPlans.value[idx] = { ...planForm.value };
   } else {
-    activityPlans.value.push({ ...planForm.value, id: Date.now() });
+    activityPlans.value.push({ ...planForm.value, id: Date.now(), action: "edit" });
   }
   showPlanModal.value = false;
 }
@@ -72,7 +72,7 @@ function openSessionModal(session = null) {
     sessionForm.value = { ...session };
     isEditSession.value = true;
   } else {
-    sessionForm.value = { id: null, planId: '', date: '', time: '', therapist: '', status: '' };
+    sessionForm.value = { id: null, patientName: '', date: '', time: '', therapist: '', status: '' };
     isEditSession.value = false;
   }
   showSessionModal.value = true;
@@ -82,7 +82,7 @@ function saveSession() {
     const idx = sessions.value.findIndex(s => s.id === sessionForm.value.id);
     if (idx !== -1) sessions.value[idx] = { ...sessionForm.value };
   } else {
-    sessions.value.push({ ...sessionForm.value, id: Date.now() });
+    sessions.value.push({ ...sessionForm.value, id: Date.now(), action: "edit" });
   }
   showSessionModal.value = false;
 }
@@ -96,7 +96,7 @@ function openAssignmentModal(assignment = null) {
     assignmentForm.value = { ...assignment };
     isEditAssignment.value = true;
   } else {
-    assignmentForm.value = { id: null, planId: '', assignee: '', assignedBy: '', date: '' };
+    assignmentForm.value = { id: null, patientName: '', assignee: '', assignedBy: '', date: '' };
     isEditAssignment.value = false;
   }
   showAssignmentModal.value = true;
@@ -106,7 +106,7 @@ function saveAssignment() {
     const idx = assignments.value.findIndex(a => a.id === assignmentForm.value.id);
     if (idx !== -1) assignments.value[idx] = { ...assignmentForm.value };
   } else {
-    assignments.value.push({ ...assignmentForm.value, id: Date.now() });
+    assignments.value.push({ ...assignmentForm.value, id: Date.now(), action: "edit" });
   }
   showAssignmentModal.value = false;
 }
@@ -120,7 +120,7 @@ function openFeedbackModal(feedback = null) {
     feedbackForm.value = { ...feedback };
     isEditFeedback.value = true;
   } else {
-    feedbackForm.value = { id: null, planId: '', feedback: '', date: '' };
+    feedbackForm.value = { id: null, patientName: '', feedback: '', date: '' };
     isEditFeedback.value = false;
   }
   showFeedbackModal.value = true;
@@ -130,7 +130,7 @@ function saveFeedback() {
     const idx = feedbacks.value.findIndex(f => f.id === feedbackForm.value.id);
     if (idx !== -1) feedbacks.value[idx] = { ...feedbackForm.value };
   } else {
-    feedbacks.value.push({ ...feedbackForm.value, id: Date.now() });
+    feedbacks.value.push({ ...feedbackForm.value, id: Date.now(), action: "edit" });
   }
   showFeedbackModal.value = false;
 }
@@ -152,6 +152,7 @@ function deleteFeedback(id) {
       <rs-table
         :data="activityPlans"
         :columns="[
+          { name: 'patientName', label: 'Patient Name' },
           { name: 'name', label: 'Plan Name' },
           { name: 'description', label: 'Description' },
           { name: 'progress', label: 'Progress' },
@@ -182,7 +183,7 @@ function deleteFeedback(id) {
       <rs-table
         :data="sessions"
         :columns="[
-          { name: 'planId', label: 'Plan ID' },
+          { name: 'patientName', label: 'Patient Name' },
           { name: 'date', label: 'Date' },
           { name: 'time', label: 'Time' },
           { name: 'therapist', label: 'Therapist' },
@@ -214,7 +215,7 @@ function deleteFeedback(id) {
       <rs-table
         :data="assignments"
         :columns="[
-          { name: 'planId', label: 'Plan ID' },
+          { name: 'patientName', label: 'Patient Name' },
           { name: 'assignee', label: 'Assignee' },
           { name: 'assignedBy', label: 'Assigned By' },
           { name: 'date', label: 'Date' },
@@ -245,7 +246,7 @@ function deleteFeedback(id) {
       <rs-table
         :data="feedbacks"
         :columns="[
-          { name: 'planId', label: 'Plan ID' },
+          { name: 'patientName', label: 'Patient Name' },
           { name: 'feedback', label: 'Feedback' },
           { name: 'date', label: 'Date' },
           { name: 'action', label: 'Actions', slot: true }
@@ -275,6 +276,7 @@ function deleteFeedback(id) {
       v-model="showPlanModal"
       :overlay-close="false"
     >
+      <FormKit type="text" v-model="planForm.patientName" name="patientName" label="Patient Name" />
       <FormKit type="text" v-model="planForm.name" name="planName" label="Plan Name" />
       <FormKit type="text" v-model="planForm.description" name="description" label="Description" />
       <FormKit type="text" v-model="planForm.progress" name="progress" label="Progress" />
@@ -288,7 +290,7 @@ function deleteFeedback(id) {
       v-model="showSessionModal"
       :overlay-close="false"
     >
-      <FormKit type="number" v-model="sessionForm.planId" name="planId" label="Plan ID" />
+      <FormKit type="text" v-model="sessionForm.patientName" name="patientName" label="Patient Name" />
       <FormKit type="date" v-model="sessionForm.date" name="date" label="Date" />
       <FormKit type="time" v-model="sessionForm.time" name="time" label="Time" />
       <FormKit type="text" v-model="sessionForm.therapist" name="therapist" label="Therapist" />
@@ -303,7 +305,7 @@ function deleteFeedback(id) {
       v-model="showAssignmentModal"
       :overlay-close="false"
     >
-      <FormKit type="number" v-model="assignmentForm.planId" name="planId" label="Plan ID" />
+      <FormKit type="text" v-model="assignmentForm.patientName" name="patientName" label="Patient Name" />
       <FormKit type="text" v-model="assignmentForm.assignee" name="assignee" label="Assignee" />
       <FormKit type="text" v-model="assignmentForm.assignedBy" name="assignedBy" label="Assigned By" />
       <FormKit type="date" v-model="assignmentForm.date" name="date" label="Date" />
@@ -317,7 +319,7 @@ function deleteFeedback(id) {
       v-model="showFeedbackModal"
       :overlay-close="false"
     >
-      <FormKit type="number" v-model="feedbackForm.planId" name="planId" label="Plan ID" />
+      <FormKit type="text" v-model="feedbackForm.patientName" name="patientName" label="Patient Name" />
       <FormKit type="textarea" v-model="feedbackForm.feedback" name="feedback" label="Feedback" />
       <FormKit type="date" v-model="feedbackForm.date" name="date" label="Date" />
     </rs-modal>
