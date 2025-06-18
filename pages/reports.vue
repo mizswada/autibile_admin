@@ -1,74 +1,53 @@
-<script setup>
-import { ref } from 'vue';
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
-
-const data = [
-  {
-    timestamp: "2024-06-10 10:00:00",
-    user: "admin",
-    action: "Created Appointment",
-    details: "Appointment for Alice Brown with Dr. John Smith",
+<script>
+export default {
+  data() {
+    return {
+      formType: 'progress', // 'progress' or 'payment'
+      // Progress report fields
+      parentName: '',
+      childName: '',
+      childId: '',
+      // Payment report fields
+      referenceId: '',
+    };
   },
-  {
-    timestamp: "2024-06-11 14:35:00",
-    user: "admin",
-    action: "Approved Therapist",
-    details: "Therapist Jane Doe approved",
-  },
-  {
-    timestamp: "2024-06-12 09:15:00",
-    user: "user1",
-    action: "Updated Profile",
-    details: "User profile updated",
+  methods: {
+    searchReport() {
+      if (this.formType === 'progress') {
+        console.log('Generating Progress Report:');
+        console.log('Parent Name:', this.parentName);
+        console.log('Child Name:', this.childName);
+        console.log('Child ID:', this.childId);
+      } else if (this.formType === 'payment') {
+        console.log('Generating Payment Report:');
+        console.log('Reference ID:', this.referenceId);
+      }
+    }
   }
-];
-
-const columns = [
-  { name: 'timestamp', label: 'Timestamp' },
-  { name: 'user', label: 'User' },
-  { name: 'action', label: 'Action' },
-  { name: 'details', label: 'Details' }
-];
-
-function downloadPDF() {
-  const doc = new jsPDF();
-  doc.text("Reports", 14, 16);
-  autoTable(doc, {
-    startY: 22,
-    head: [columns.map(col => col.label)],
-    body: data.map(row => columns.map(col => row[col.name])),
-  });
-  doc.save("reports.pdf");
-}
+};
 </script>
-
 <template>
-  <div class="mb-4">
-    <h1 class="text-2xl font-bold">Reports</h1>
-    <div class="flex justify-end mb-2">
-      <rs-button @click="downloadPDF">
-        <Icon name="material-symbols:download" class="mr-1" />
-        Download PDF
-      </rs-button>
-    </div>
-    <div class="card p-4 mt-4">
-      <rs-table
-        :data="data"
-        :columns="columns"
-        :options="{
-          variant: 'default',
-          striped: true,
-          borderless: true,
-        }"
-        :options-advanced="{
-          sortable: true,
-          responsive: true,
-          filterable: false,
-        }"
-        advanced
-      >
-      </rs-table>
-    </div>
-  </div>
+    <rs-collapse>
+        <rs-collapse-item title="Report Generator">
+            <div class="mb-4">
+                <label>
+                    <input type="radio" value="progress" v-model="formType" /> Progress Report
+                </label>
+                <label class="ml-4">
+                    <input type="radio" value="payment" v-model="formType" /> Payment
+                </label>
+            </div>
+            <div v-if="formType === 'progress'">
+                <FormKit type="text" label="Parent Name" v-model="parentName" />
+                <FormKit type="text" label="Child Name" v-model="childName" />
+                <FormKit type="text" label="Child ID" v-model="childId" />
+            </div>
+            <div v-else-if="formType === 'payment'">
+                <FormKit type="text" label="Reference ID" v-model="referenceId" />
+            </div>
+            <div class="flex justify-end space-x-4 mt-4">
+                <button @click="searchReport" class="bg-green-500 text-white px-4 py-2 rounded">Generate</button>
+            </div>
+        </rs-collapse-item>
+    </rs-collapse>
 </template>

@@ -10,6 +10,7 @@ const reports = ref([
     flagged: true,
     reportedUser: "Spam User",
     date: "2024-06-03",
+    action: "review",
   },
   {
     id: 2,
@@ -19,6 +20,7 @@ const reports = ref([
     flagged: true,
     reportedUser: "Troll123",
     date: "2024-06-04",
+    action: "edit",
   },
   {
     id: 3,
@@ -28,6 +30,7 @@ const reports = ref([
     flagged: false,
     reportedUser: "Jane Smith",
     date: "2024-06-02",
+    action: "edit",
   }
 ]);
 
